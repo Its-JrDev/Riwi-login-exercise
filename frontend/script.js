@@ -1,53 +1,61 @@
-// alert(`hello coders!!!`)
-// const name = prompt(`Dame tu nombre: `)
-// alert(`Bienvenido ${name}`)
-//
-const getElementById = (id) => {
-  return document.getElementById(id);
-};
+const getById = (id) => document.getElementById(id);
 
-const rickUrl = 'https://rickandmortyapi.com/api/character';
+/**
+ * Displays feedback messages in the UI using BEM modifiers
+ * @param {string} text - The message to display
+ * @param {string} type - The modifier type ('error' or 'success')
+ */
+function showMessage(text, type) {
+  const box = getById('message-box');
+  box.textContent = text;
+  // Updates class using BEM: block--modifier
+  box.className = `status-message status-message--${type}`;
+}
 
-async function login(email, password) {
-  if (!email || !password) {
-    alert("Fill all fields");
-    return null;
-  }
+/**
+ * Handles the authentication logic with the local API
+ */
+async function performLogin(email, password) {
+  const box = getById('message-box');
+  box.className = 'status-message'; // Reset to base class only
 
-  const coderUrl =
-    `http://localhost:3000/coders?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+  try {
+    const url = `http://localhost:3000/coders?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
+    
+    const response = await fetch(url);
+    const data = await response.json();
 
-  const response = await fetch(coderUrl);
-  const data = await response.json();
-
-  console.log("API response:", data);
-
-  if (data.length === 1) {
-    const user = data[0];
-    alert(`Login Successful! Welcome ${user.name}`);
-    return user;
-  } else {
-    alert("Error: Incorrect email or password");
+    if (data.length === 1) {
+      const user = data[0];
+      showMessage(`Welcome back, ${user.name}!`, 'success');
+      
+      // Optional: Redirect after success
+      // setTimeout(() => window.location.href = 'dashboard.html', 2000);
+      
+      return user;
+    } else {
+      showMessage("Invalid email or password.", "error");
+      return null;
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+    showMessage("Server connection failed.", "error");
     return null;
   }
 }
 
+// Global Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = getById('loginForm');
 
-async function getData(url) {
-  const response = await fetch(url);
-  const { results } = await response.json();
-
-  console.log({ results });
-
-  const ulCharacters = getElementById("characters");
-
-  console.log({ ulCharacters });
-  ulCharacters.innerHTML = `<li> abc</li>`;
-  results.forEach((character) => {
-    console.log(character.name);
-    ulCharacters.innerHTML += `<li><img src="${character.image}"/></li>`;
-  });
-}
-
-getData(rickUrl);
-login(prompt('User: '), prompt('Password: '))
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); 
+      
+      const email = getById('userEmail').value;
+      const password = getById('userPassword').value;
+      
+      await performLogin(email, password);
+    });
+  }
+});

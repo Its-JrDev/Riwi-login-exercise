@@ -1,18 +1,51 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="styles.css" />
-    <title>MyApp</title>
+    <title>MyApp | Login</title>
   </head>
-  <body>
-    <main class="min-h-screen flex items-center justify-center">
-      <ul
-        id="characters"
-        class="w-[300px] h-[300px] border-2 border-gray-400 rounded-xl grid grid-cols-5 grid-rows-4 p-4 gap-4"
-      ></ul>
+  <body class="login-page">
+    <main class="login-page__content">
+      
+      <section class="login-card">
+        <h2 class="login-card__title">Sign In</h2>
+        
+        <form id="loginForm" class="login-form">
+          
+          <div class="login-form__group">
+            <label for="userEmail" class="login-form__label">Email Address</label>
+            <input 
+              type="email" 
+              id="userEmail" 
+              class="login-form__input" 
+              required
+            >
+          </div>
+
+          <div class="login-form__group">
+            <label for="userPassword" class="login-form__label">Password</label>
+            <input 
+              type="password" 
+              id="userPassword" 
+              class="login-form__input" 
+              required
+            >
+          </div>
+
+          <!-- Message box using BEM modifiers -->
+          <div id="message-box" class="status-message"></div>
+
+          <button type="submit" class="login-form__button">
+            Log in
+          </button>
+          
+          <a href="#" class="login-form__link">Forgot password?</a>
+          
+        </form>
+      </section>
+
     </main>
     <script src="script.js"></script>
   </body>
